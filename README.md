@@ -1,36 +1,54 @@
-This is a [Next.js](https://nextjs.org) project bootstrapped with [`create-next-app`](https://nextjs.org/docs/app/api-reference/cli/create-next-app).
+# PWM Power System Calculator
 
-## Getting Started
+A clean, minimal web calculator for the **PWM Power System** from **Arknights: Endfield**.
 
-First, run the development server:
+## 🚀 Quick Start
 
 ```bash
+npm install
 npm run dev
-# or
-yarn dev
-# or
-pnpm dev
-# or
-bun dev
 ```
 
-Open [http://localhost:3000](http://localhost:3000) with your browser to see the result.
+Open [http://localhost:3000](http://localhost:3000)
 
-You can start editing the page by modifying `app/page.tsx`. The page auto-updates as you edit the file.
+## 🎮 What It Does
 
-This project uses [`next/font`](https://nextjs.org/docs/app/building-your-application/optimizing/fonts) to automatically optimize and load [Geist](https://vercel.com/font), a new font family for Vercel.
+Calculates binary power distribution for a 12-bit PWM system:
+- Input battery specs and required watts
+- See which power slots (BRIDGE/CONVERGER) to activate
+- Visual binary representation with large, clear cards
 
-## Learn More
+## 📐 Formula
 
-To learn more about Next.js, take a look at the following resources:
+```
+total_units = battery_watts × battery_seconds ÷ 2
+base_power = total_units ÷ 8
+num_bits = min(floor(log₂(base_power)), 12)
+max_watts = base_power - 1
+adjusted_required = required_watts - 200 (PAC cost)
+```
 
-- [Next.js Documentation](https://nextjs.org/docs) - learn about Next.js features and API.
-- [Learn Next.js](https://nextjs.org/learn) - an interactive Next.js tutorial.
+## 🎨 Features
 
-You can check out [the Next.js GitHub repository](https://github.com/vercel/next.js) - your feedback and contributions are welcome!
+- **12-bit maximum** — Fixed at 12 bits like the game
+- **Large bit cards** — Easy to see BRIDGE (1) vs CONVERGER (0)
+- **Real-time updates** — All values recalculate instantly
+- **Clean design** — No clutter, just what you need
+- **Dark theme** — Easy on the eyes
 
-## Deploy on Vercel
+## 🛠️ Tech Stack
 
-The easiest way to deploy your Next.js app is to use the [Vercel Platform](https://vercel.com/new?utm_medium=default-template&filter=next.js&utm_source=create-next-app&utm_campaign=create-next-app-readme) from the creators of Next.js.
+- Next.js 16 + TypeScript
+- Tailwind CSS 4
+- Framer Motion
 
-Check out our [Next.js deployment documentation](https://nextjs.org/docs/app/building-your-application/deploying) for more details.
+## 📱 Usage
+
+1. **Adjust inputs** on the left
+2. **See max capacity** at the top
+3. **View bit configuration** — Amber = BRIDGE (active), Gray = CONVERGER (inactive)
+4. Each active BRIDGE contributes its watt value
+
+---
+
+Made for Arknights: Endfield
