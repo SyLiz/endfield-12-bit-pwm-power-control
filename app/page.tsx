@@ -3,13 +3,13 @@
 import { useState } from "react";
 import { usePWMCalculator } from "@/hooks/usePWMCalculator";
 import { InputPanel } from "@/components/InputPanel";
-import { MaxWattsBadge } from "@/components/MaxWattsBadge";
 import { BitDisplay } from "@/components/BitDisplay";
 
 export default function Home() {
   const [batteryWatts, setBatteryWatts] = useState(1600);
   const [batterySeconds, setBatterySeconds] = useState(40);
   const [requiredWatts, setRequiredWatts] = useState(2235);
+  const [topView, setTopView] = useState(false);
 
   const {
     basePower,
@@ -26,63 +26,82 @@ export default function Home() {
   });
 
   const hasError = errors.length > 0;
+  const suffix = topView ? "3d" : "2d";
 
   return (
-    <div className="min-h-screen bg-gradient-to-b from-gray-950 via-gray-900 to-gray-950">
-      {/* Header */}
-      <header className="bg-gradient-to-r from-amber-500/10 to-orange-500/10 border-b border-amber-500/20">
-        <div className="container mx-auto px-8 py-6">
-          <h1 className="text-4xl font-bold text-amber-400 text-center">
-            PWM Power System Calculator
-          </h1>
-        </div>
-      </header>
+    <div className="p-2">
+      <h1 className="text-2xl font-bold mb-4">
+        12 Bit PWM Power Control
+      </h1>
 
-      <main className="container mx-auto px-8 py-8 max-w-[1600px]">
-        {/* Top: Inputs in one row */}
-        <div className="mb-8">
-          <InputPanel
-            batteryWatts={batteryWatts}
-            batterySeconds={batterySeconds}
-            requiredWatts={requiredWatts}
-            onBatteryWattsChange={setBatteryWatts}
-            onBatterySecondsChange={setBatterySeconds}
-            onRequiredWattsChange={setRequiredWatts}
-            warnings={warnings}
-            adjustedRequired={adjustedRequired}
+      {/* Inputs on left, BitDisplay on right */}
+      <div className="flex items-start gap-8 mb-4">
+        <InputPanel
+          batteryWatts={batteryWatts}
+          batterySeconds={batterySeconds}
+          requiredWatts={requiredWatts}
+          onBatteryWattsChange={setBatteryWatts}
+          onBatterySecondsChange={setBatterySeconds}
+          onRequiredWattsChange={setRequiredWatts}
+          warnings={warnings}
+          adjustedRequired={adjustedRequired}
+          maxWatts={maxWatts}
+          errors={errors}
+        />
+
+        <BitDisplay
+          bits={bits}
+          numBits={numBits}
+          hasError={hasError}
+          adjustedRequired={adjustedRequired}
+          basePower={basePower}
+        />
+      </div>
+
+      <div className="mb-2">
+        <label className="cursor-pointer">
+          <input
+            type="checkbox"
+            checked={topView}
+            onChange={(e) => setTopView(e.target.checked)}
+            className="mr-2"
           />
-        </div>
+          Enter Top View 3D
+        </label>
+      </div>
 
-        {/* Max Watts Badge */}
-        <div className="mb-8">
-          <MaxWattsBadge maxWatts={maxWatts} basePower={basePower} />
+      {/* Blueprint visual with overlay */}
+      <div className="relative" style={{ width: 1600, height: 966 }}>
+        {/* eslint-disable-next-line @next/next/no-img-element */}
+        <img
+          src={`/images/${suffix}.png`}
+          alt="View"
+          className="absolute"
+          style={{ width: 1600, height: 966 }}
+        />
+        <div
+          className="absolute flex"
+          style={{ top: 194, left: 233 }}
+        >
+          {bits.map((bit, i) => (
+            // eslint-disable-next-line @next/next/no-img-element
+            <img
+              key={i}
+              src={`/images/${bit ? "beltBridge" : "converger"}${suffix}.png`}
+              alt={bit ? "1" : "0"}
+              style={{
+                width: 59,
+                height: 59,
+                marginRight: i === 4 ? 0 : 1,
+              }}
+            />
+          ))}
         </div>
+      </div>
 
-        {/* Errors */}
-        {errors.length > 0 && (
-          <div className="mb-8">
-            {errors.map((error, index) => (
-              <div
-                key={index}
-                className="px-6 py-4 bg-red-500/20 border-l-4 border-red-500 rounded-lg text-red-300 font-semibold text-lg"
-              >
-                ⚠️ {error}
-              </div>
-            ))}
-          </div>
-        )}
-
-        {/* Bit Display - Full width */}
-        <div>
-          <BitDisplay
-            bits={bits}
-            numBits={numBits}
-            hasError={hasError}
-            adjustedRequired={adjustedRequired}
-            basePower={basePower}
-          />
-        </div>
-      </main>
+      <footer className="mt-4 text-sm text-[#808080]">
+        Copyright &copy; 2026. All Rights Reserved.
+      </footer>
     </div>
   );
 }

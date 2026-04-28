@@ -2,7 +2,7 @@ import type { Metadata } from "next";
 import "./globals.css";
 
 export const metadata: Metadata = {
-  title: "PWM Power System Calculator | Arknights: Endfield",
+  title: "12 Bit PWM Power Control | Arknights: Endfield",
   description: "Calculate binary power distribution for the PWM Power System from Arknights: Endfield",
 };
 
